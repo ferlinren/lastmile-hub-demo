@@ -362,6 +362,7 @@ async function renderRanking() {
   });
 
   renderScatter();
+  renderRadar();
 }
 
 // ---------------------------------------------------------------------------
@@ -439,6 +440,108 @@ function renderScatter() {
       if (site) flyTo(Number(site.lon), Number(site.lat));
     });
   });
+}
+
+// ---------------------------------------------------------------------------
+// Radar chart: compare top 3 candidates + whatever is selected
+// ---------------------------------------------------------------------------
+
+const RADAR_AXES = [
+  { key: 'weighted_demand', label: 'Demand', invert: false },
+  { key: 'pct_within_8km', label: 'Coverage', invert: false },
+  { key: 'avg_distance_km', label: 'Routing', invert: true },
+  { key: 'total_monthly_orders', label: 'Orders', invert: false },
+];
+
+const RANK_COLORS = ['#162945', '#036FE2', '#7EB2EA'];
+const RADAR_HIGHLIGHT_COLOR = '#E4572E';
+
+function normalize(value: number, min: number, max: number, invert: boolean): number {
+  if (max === min) return 0.5;
+  const n = (value - min) / (max - min);
+  return invert ? 1 - n : n;
+}
+
+function renderRadar() {
+  const container = document.getElementById('radar-chart')!;
+  const legendRoot = document.getElementById('radar-legend')!;
+  if (rankingRows.length < 3) return;
+
+  const top3 = rankingRows.slice(0, 3);
+  const top3Ids = new Set(top3.map((r) => r.site_id));
+  const extra =
+    selectedSiteId && !top3Ids.has(selectedSiteId)
+      ? rankingRows.find((r) => r.site_id === selectedSiteId)
+      : null;
+
+  const displayed = extra ? [...top3, extra] : top3;
+  const colors = extra ? [...RANK_COLORS, RADAR_HIGHLIGHT_COLOR] : RANK_COLORS;
+
+  const bounds = RADAR_AXES.map((axis) => {
+    const values = rankingRows.map((r) => Number(r[axis.key as keyof typeof r]));
+    return { min: Math.min(...values), max: Math.max(...values) };
+  });
+
+  const size = 260;
+  const cx = size / 2;
+  const cy = size / 2 + 6;
+  const maxR = 92;
+  const angleFor = (i: number) => -Math.PI / 2 + i * ((Math.PI * 2) / RADAR_AXES.length);
+
+  const gridRings = [0.25, 0.5, 0.75, 1]
+    .map((frac) => {
+      const pts = RADAR_AXES.map((_, i) => {
+        const a = angleFor(i);
+        return `${(cx + frac * maxR * Math.cos(a)).toFixed(1)},${(cy + frac * maxR * Math.sin(a)).toFixed(1)}`;
+      });
+      return `<polygon points="${pts.join(' ')}" class="radar-grid" />`;
+    })
+    .join('');
+
+  const axisLines = RADAR_AXES.map((axis, i) => {
+    const a = angleFor(i);
+    const x2 = cx + maxR * Math.cos(a);
+    const y2 = cy + maxR * Math.sin(a);
+    const lx = cx + (maxR + 16) * Math.cos(a);
+    const ly = cy + (maxR + 16) * Math.sin(a);
+    const anchor = Math.cos(a) > 0.3 ? 'start' : Math.cos(a) < -0.3 ? 'end' : 'middle';
+    return `
+      <line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="radar-axis-line" />
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="radar-axis-label" text-anchor="${anchor}" dominant-baseline="middle">${axis.label}</text>
+    `;
+  }).join('');
+
+  const shapes = displayed
+    .map((r, idx) => {
+      const pts = RADAR_AXES.map((axis, i) => {
+        const { min, max } = bounds[i];
+        const norm = normalize(Number(r[axis.key as keyof typeof r]), min, max, axis.invert);
+        const a = angleFor(i);
+        const radius = norm * maxR;
+        return `${(cx + radius * Math.cos(a)).toFixed(1)},${(cy + radius * Math.sin(a)).toFixed(1)}`;
+      });
+      const color = colors[idx];
+      return `<polygon points="${pts.join(' ')}" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="2" />`;
+    })
+    .join('');
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${size} ${size}" width="100%" height="${size}">
+      ${gridRings}
+      ${axisLines}
+      ${shapes}
+    </svg>
+  `;
+
+  legendRoot.innerHTML = displayed
+    .map((r, idx) => {
+      const isExtra = Boolean(extra && r.site_id === extra.site_id);
+      return `<div class="radar-legend-row">
+        <span class="radar-legend-swatch" style="background:${colors[idx]}"></span>
+        <span class="radar-legend-label">${isExtra ? '' : `#${r.ranking} `}${r.name}${isExtra ? ' (selected)' : ''}</span>
+      </div>`;
+    })
+    .join('');
 }
 
 // ---------------------------------------------------------------------------

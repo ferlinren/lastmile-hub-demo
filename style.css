@@ -156,6 +156,16 @@ html, body { height: 100%; font: 400 14px/1.5 var(--font-family); color: var(--c
 .scatter-point:hover { stroke: var(--color-primary); stroke-width: 2; }
 @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
 
+.radar-chart { width: 100%; }
+.radar-chart svg { display: block; }
+.radar-grid { fill: none; stroke: var(--color-border); stroke-width: 1; }
+.radar-axis-line { stroke: var(--color-border); stroke-width: 1; }
+.radar-axis-label { font-size: 9px; fill: var(--color-text-secondary); font-family: var(--font-family); font-weight: 500; }
+.radar-legend { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.radar-legend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.radar-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.radar-legend-label { color: var(--color-text-secondary); }
+
 .detail-card { background: var(--color-bg); border-radius: var(--radius-md); padding: 14px; border: 1px solid var(--color-border); }
 .detail-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 .detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--color-border); }
