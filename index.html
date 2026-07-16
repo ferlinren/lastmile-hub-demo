@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Last-Mile Delivery Hub — Site Selection Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
+    <script type="module" crossorigin src="/lastmile-hub-demo/assets/index-CPBQNKun.js"></script>
+    <link rel="stylesheet" crossorigin href="/lastmile-hub-demo/assets/index-BvZPWSL2.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="map"></div>
+      <canvas id="deck-canvas"></canvas>
+
+      <header id="topbar">
+        <div class="brand">
+          <span class="brand-mark">CARTO</span>
+          <span class="brand-sep">|</span>
+          <span class="brand-sub">Delivery Hub Site Selection — Mexico City</span>
+        </div>
+        <div id="segment-filter" class="segment-filter"></div>
+      </header>
+
+      <aside id="panel" class="panel">
+        <div class="panel-scroll">
+          <section class="panel-section">
+            <h1>Where should the next delivery hub go?</h1>
+            <p class="panel-lead">
+              Comparing 12 candidate sites against 2 hubs already in operation, based on
+              customer clustering and routing quality.
+            </p>
+          </section>
+
+          <section class="panel-section kpis" id="kpis"></section>
+
+          <section class="panel-section">
+            <h2>Site ranking</h2>
+            <div id="ranking-list" class="ranking-list">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h2>Demand vs. routing</h2>
+            <p class="panel-lead panel-lead-tight">
+              Each point is a site. Top-right = more demand and shorter distance — the best quadrant.
+            </p>
+            <div id="scatter-chart" class="scatter-chart"></div>
+          </section>
+
+          <section class="panel-section">
+            <h2>Compare top candidates</h2>
+            <p class="panel-lead panel-lead-tight">
+              Top 3 ranked sites, always shown. Click any site elsewhere to add it to the comparison.
+            </p>
+            <div id="radar-chart" class="radar-chart"></div>
+            <div id="radar-legend" class="radar-legend"></div>
+          </section>
+
+          <section class="panel-section" id="detail-section" hidden>
+            <h2>Site detail</h2>
+            <div id="detail-card" class="detail-card"></div>
+          </section>
+        </div>
+      </aside>
+
+      <div id="legend" class="legend"></div>
+    </div>
+  </body>
+</html>
