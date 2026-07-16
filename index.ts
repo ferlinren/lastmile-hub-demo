@@ -482,10 +482,10 @@ function renderRadar() {
     return { min: Math.min(...values), max: Math.max(...values) };
   });
 
-  const size = 260;
+  const size = 300;
   const cx = size / 2;
   const cy = size / 2 + 6;
-  const maxR = 92;
+  const maxR = 74;
   const angleFor = (i: number) => -Math.PI / 2 + i * ((Math.PI * 2) / RADAR_AXES.length);
 
   const gridRings = [0.25, 0.5, 0.75, 1]
@@ -502,8 +502,8 @@ function renderRadar() {
     const a = angleFor(i);
     const x2 = cx + maxR * Math.cos(a);
     const y2 = cy + maxR * Math.sin(a);
-    const lx = cx + (maxR + 16) * Math.cos(a);
-    const ly = cy + (maxR + 16) * Math.sin(a);
+    const lx = cx + (maxR + 14) * Math.cos(a);
+    const ly = cy + (maxR + 14) * Math.sin(a);
     const anchor = Math.cos(a) > 0.3 ? 'start' : Math.cos(a) < -0.3 ? 'end' : 'middle';
     return `
       <line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="radar-axis-line" />

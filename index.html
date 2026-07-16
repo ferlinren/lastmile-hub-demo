@@ -34,15 +34,6 @@
           <section class="panel-section kpis" id="kpis"></section>
 
           <section class="panel-section">
-            <h2>Site ranking</h2>
-            <div id="ranking-list" class="ranking-list">
-              <div class="skeleton-row"></div>
-              <div class="skeleton-row"></div>
-              <div class="skeleton-row"></div>
-            </div>
-          </section>
-
-          <section class="panel-section">
             <h2>Demand vs. routing</h2>
             <p class="panel-lead panel-lead-tight">
               Each point is a site. Top-right = more demand and shorter distance — the best quadrant.
@@ -51,19 +42,30 @@
           </section>
 
           <section class="panel-section">
-            <h2>Compare top candidates</h2>
-            <p class="panel-lead panel-lead-tight">
-              Top 3 ranked sites, always shown. Click any site elsewhere to add it to the comparison.
-            </p>
-            <div id="radar-chart" class="radar-chart"></div>
-            <div id="radar-legend" class="radar-legend"></div>
-          </section>
-
-          <section class="panel-section" id="detail-section" hidden>
-            <h2>Site detail</h2>
-            <div id="detail-card" class="detail-card"></div>
+            <h2>Site ranking</h2>
+            <div id="ranking-list" class="ranking-list">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
           </section>
         </div>
+      </aside>
+
+      <aside id="side-panel-left" class="side-panel-left">
+        <section class="panel-section">
+          <h2>Compare top candidates</h2>
+          <p class="panel-lead panel-lead-tight">
+            Top 3 ranked sites, always shown. Click any site elsewhere to add it to the comparison.
+          </p>
+          <div id="radar-chart" class="radar-chart"></div>
+          <div id="radar-legend" class="radar-legend"></div>
+        </section>
+
+        <section class="panel-section" id="detail-section" hidden>
+          <h2>Site detail</h2>
+          <div id="detail-card" class="detail-card"></div>
+        </section>
       </aside>
 
       <div id="legend" class="legend"></div>
