@@ -122,6 +122,14 @@ html, body { height: 100%; font: 400 14px/1.5 var(--font-family); color: var(--c
 .kpi-value { font-size: 22px; font-weight: 600; color: var(--color-primary-dark); }
 .kpi-label { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
 
+.pie-row { display: flex; align-items: center; gap: 20px; }
+.pie-chart { width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0; background: var(--color-border); }
+.pie-legend { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.pie-legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.pie-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.pie-legend-label { font-weight: 500; width: 54px; flex-shrink: 0; }
+.pie-legend-value { color: var(--color-text-secondary); }
+
 .ranking-list { display: flex; flex-direction: column; gap: 8px; }
 .ranking-row {
   display: flex;

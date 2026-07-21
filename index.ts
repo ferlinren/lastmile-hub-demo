@@ -320,6 +320,51 @@ async function renderKPIs() {
 }
 
 // ---------------------------------------------------------------------------
+// Tier pie chart (always the full customer base, ignores the tier filter)
+// ---------------------------------------------------------------------------
+
+async function renderTierPie() {
+  const pieRoot = document.getElementById('tier-pie')!;
+  const legendRoot = document.getElementById('tier-pie-legend')!;
+
+  const unfilteredCustomers = vectorTableSource({
+    ...cartoConfig,
+    tableName: TABLES.customers,
+    columns: ['tier'],
+  });
+  const { widgetSource } = await unfilteredCustomers;
+  const categories = await widgetSource.getCategories({
+    column: 'tier',
+    operation: 'count',
+    operationColumn: 'tier',
+  });
+
+  const byTier: Record<string, number> = {};
+  for (const c of categories) byTier[String(c.name)] = c.value;
+  const total = TIER_DOMAIN.reduce((sum, t) => sum + (byTier[t] ?? 0), 0) || 1;
+
+  let cursor = 0;
+  const stops = TIER_DOMAIN.map((t) => {
+    const pct = ((byTier[t] ?? 0) / total) * 100;
+    const start = cursor;
+    cursor += pct;
+    return `${TIER_COLORS[t]} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
+  }).join(', ');
+
+  pieRoot.style.background = `conic-gradient(${stops})`;
+
+  legendRoot.innerHTML = TIER_DOMAIN.map((t) => {
+    const count = byTier[t] ?? 0;
+    const pct = ((count / total) * 100).toFixed(0);
+    return `<div class="pie-legend-row">
+      <span class="pie-legend-swatch" style="background:${TIER_COLORS[t]}"></span>
+      <span class="pie-legend-label">${t}</span>
+      <span class="pie-legend-value">${count.toLocaleString()} (${pct}%)</span>
+    </div>`;
+  }).join('');
+}
+
+// ---------------------------------------------------------------------------
 // Ranking list
 // ---------------------------------------------------------------------------
 
@@ -590,4 +635,5 @@ function flyTo(longitude: number, latitude: number) {
 renderTierFilter();
 renderLegend();
 renderKPIs();
+renderTierPie();
 renderRanking();
